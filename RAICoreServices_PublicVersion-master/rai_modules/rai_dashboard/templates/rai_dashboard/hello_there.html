@@ -1,0 +1,445 @@
+<!DOCTYPE html> 
+<!-- {% load static %} -->
+
+<html>
+
+<title>Ganbarou</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/plugins/timeline.js"></script>
+<script src="https://www.amcharts.com/lib/4/plugins/bullets.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/dark.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+
+
+<style>
+body { background-color: #30303d; color: #fff; }
+#chartdiv {
+    width: 100%;
+    height: 600px;
+}
+    
+/* .demo-theme-dark .demo-background {
+    background: #000;
+} */
+
+body { background-color: #30303d; color: #fff; }
+#chartbar {
+  width: 100%;
+  height: 500px;
+}
+</style>
+
+
+
+
+<script>
+// chartdiv
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_dark);
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+var chart = am4core.create("chartdiv", am4plugins_timeline.SerpentineChart);
+chart.curveContainer.padding(50, 20, 50, 20);
+chart.levelCount = 4;
+chart.yAxisRadius = am4core.percent(25);
+chart.yAxisInnerRadius = am4core.percent(-25);
+chart.maskBullets = false;
+
+var colorSet = new am4core.ColorSet();
+colorSet.saturation = 0.5;
+
+chart.data = [{
+    "category": "Module #1",
+    "start": "2019-01-10",
+    "end": "2019-01-13",
+    "color": colorSet.getIndex(0),
+    "task": "Gathering requirements"
+}, {
+    "category": "Module #1",
+    "start": "2019-02-05",
+    "end": "2019-04-18",
+    "color": colorSet.getIndex(0),
+    "task": "Development"
+}, {
+    "category": "Module #2",
+    "start": "2019-01-08",
+    "end": "2019-01-10",
+    "color": colorSet.getIndex(5),
+    "task": "Gathering requirements"
+}, {
+    "category": "Module #2",
+    "start": "2019-01-12",
+    "end": "2019-01-15",
+    "color": colorSet.getIndex(5),
+    "task": "Producing specifications"
+}, {
+    "category": "Module #2",
+    "start": "2019-01-16",
+    "end": "2019-02-05",
+    "color": colorSet.getIndex(5),
+    "task": "Development"
+}, {
+    "category": "Module #2",
+    "start": "2019-02-10",
+    "end": "2019-02-18",
+    "color": colorSet.getIndex(5),
+    "task": "Testing and QA"
+}, {
+    "category": ""
+}, {
+    "category": "Module #3",
+    "start": "2019-01-01",
+    "end": "2019-01-19",
+    "color": colorSet.getIndex(9),
+    "task": "Gathering requirements"    
+}, {
+    "category": "Module #3",
+    "start": "2019-02-01",
+    "end": "2019-02-10",
+    "color": colorSet.getIndex(9),
+    "task": "Producing specifications"
+}, {
+    "category": "Module #3",
+    "start": "2019-03-10",
+    "end": "2019-04-15",
+    "color": colorSet.getIndex(9),
+    "task": "Development"
+}, {
+    "category": "Module #3",
+    "start": "2019-04-20",
+    "end": "2019-04-30",
+    "color": colorSet.getIndex(9),
+    "task": "Testing and QA",
+    "disabled2":false,
+    "image2":"",
+    "location":0
+}, {
+    "category": "Module #4",
+    "start": "2019-01-15",
+    "end": "2019-02-12",
+    "color": colorSet.getIndex(15),
+    "task": "Gathering requirements",
+    "disabled1":false,
+    "image1":""
+}, {
+    "category": "Module #4",
+    "start": "2019-02-25",
+    "end": "2019-03-10",
+    "color": colorSet.getIndex(15),
+    "task": "Development"
+}, {
+    "category": "Module #4",
+    "start": "2019-03-23",
+    "end": "2019-04-29",
+    "color": colorSet.getIndex(15),
+    "task": "Testing and QA"
+}];
+
+chart.dateFormatter.dateFormat = "yyyy-MM-dd";
+chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+chart.fontSize = 11;
+
+var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "category";
+categoryAxis.renderer.grid.template.disabled = true;
+categoryAxis.renderer.labels.template.paddingRight = 25;
+categoryAxis.renderer.minGridDistance = 10;
+categoryAxis.renderer.innerRadius = -60;
+categoryAxis.renderer.radius = 60;
+
+var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+dateAxis.renderer.minGridDistance = 70;
+dateAxis.baseInterval = { count: 1, timeUnit: "day" };
+dateAxis.renderer.tooltipLocation = 0;
+dateAxis.startLocation = -0.5;
+dateAxis.renderer.line.strokeDasharray = "1,4";
+dateAxis.renderer.line.strokeOpacity = 0.6;
+dateAxis.tooltip.background.fillOpacity = 0.2;
+dateAxis.tooltip.background.cornerRadius = 5;
+dateAxis.tooltip.label.fill = new am4core.InterfaceColorSet().getFor("alternativeBackground");
+dateAxis.tooltip.label.paddingTop = 7;
+
+var labelTemplate = dateAxis.renderer.labels.template;
+labelTemplate.verticalCenter = "middle";
+labelTemplate.fillOpacity = 0.7;
+labelTemplate.background.fill = new am4core.InterfaceColorSet().getFor("background");
+labelTemplate.background.fillOpacity = 1;
+labelTemplate.padding(7, 7, 7, 7);
+
+var series = chart.series.push(new am4plugins_timeline.CurveColumnSeries());
+series.columns.template.height = am4core.percent(20);
+series.columns.template.tooltipText = "{task}: [bold]{openDateX}[/] - [bold]{dateX}[/]";
+
+series.dataFields.openDateX = "start";
+series.dataFields.dateX = "end";
+series.dataFields.categoryY = "category";
+series.columns.template.propertyFields.fill = "color"; // get color from data
+series.columns.template.propertyFields.stroke = "color";
+series.columns.template.strokeOpacity = 0;
+
+var bullet = series.bullets.push(new am4charts.CircleBullet());
+bullet.circle.radius = 3;
+bullet.circle.strokeOpacity = 0;
+bullet.propertyFields.fill = "color";
+bullet.locationX = 0;
+
+
+var bullet2 = series.bullets.push(new am4charts.CircleBullet());
+bullet2.circle.radius = 3;
+bullet2.circle.strokeOpacity = 0;
+bullet2.propertyFields.fill = "color";
+bullet2.locationX = 1;
+
+
+var imageBullet1 = series.bullets.push(new am4plugins_bullets.PinBullet());
+imageBullet1.disabled = true;
+imageBullet1.propertyFields.disabled = "disabled1";
+imageBullet1.locationX = 1;
+imageBullet1.circle.radius = 20;
+imageBullet1.propertyFields.stroke = "color";
+imageBullet1.background.propertyFields.fill = "color";
+imageBullet1.image = new am4core.Image();
+imageBullet1.image.propertyFields.href = "image1";
+
+var imageBullet2 = series.bullets.push(new am4plugins_bullets.PinBullet());
+imageBullet2.disabled = true;
+imageBullet2.propertyFields.disabled = "disabled2";
+imageBullet2.locationX = 0;
+imageBullet2.circle.radius = 20;
+imageBullet2.propertyFields.stroke = "color";
+imageBullet2.background.propertyFields.fill = "color";
+imageBullet2.image = new am4core.Image();
+imageBullet2.image.propertyFields.href = "image2";
+
+
+var eventSeries = chart.series.push(new am4plugins_timeline.CurveLineSeries());
+eventSeries.dataFields.dateX = "eventDate";
+eventSeries.dataFields.categoryY = "category";
+eventSeries.data = [
+    { category: "", eventDate: "2019-01-15", letter: "A", description: "Pete booked here" },
+    { category: "", eventDate: "2019-01-23", letter: "B", description: "Ti booked here" },
+    { category: "", eventDate: "2019-02-10", letter: "C", description: "Ton booked here" },
+    { category: "", eventDate: "2019-02-29", letter: "D", description: "Tree booked here" },
+    { category: "", eventDate: "2019-03-06", letter: "E", description: "Ter booked here" },
+    { category: "", eventDate: "2019-03-12", letter: "F", description: "Mind booked here" },
+    { category: "", eventDate: "2019-03-22", letter: "G", description: "Earth booked here" }];
+eventSeries.strokeOpacity = 0;
+
+var flagBullet = eventSeries.bullets.push(new am4plugins_bullets.FlagBullet())
+flagBullet.label.propertyFields.text = "letter";
+flagBullet.locationX = 0;
+flagBullet.tooltipText = "{description}";
+
+chart.scrollbarX = new am4core.Scrollbar();
+chart.scrollbarX.align = "center"
+chart.scrollbarX.width = am4core.percent(85);
+
+var cursor = new am4plugins_timeline.CurveCursor();
+chart.cursor = cursor;
+cursor.xAxis = dateAxis;
+cursor.yAxis = categoryAxis;
+cursor.lineY.disabled = true;
+cursor.lineX.strokeDasharray = "1,4";
+cursor.lineX.strokeOpacity = 1;
+
+dateAxis.renderer.tooltipLocation2 = 0;
+categoryAxis.cursorTooltipEnabled = false;
+
+}); // end am4core.ready()
+
+
+
+
+// chartbar
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_dark);
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartbar", am4charts.XYChart3D);
+
+// Add data
+chart.data = [{
+  "year": 2005,
+  "income": 23.5,
+  "color": chart.colors.next()
+}, {
+  "year": 2006,
+  "income": 26.2,
+  "color": chart.colors.next()
+}, {
+  "year": 2007,
+  "income": 30.1,
+  "color": chart.colors.next()
+}, {
+  "year": 2008,
+  "income": 29.5,
+  "color": chart.colors.next()
+}, {
+  "year": 2009,
+  "income": 24.6,
+  "color": chart.colors.next()
+}];
+
+// Create axes
+var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "year";
+categoryAxis.numberFormatter.numberFormat = "#";
+categoryAxis.renderer.inversed = true;
+
+var  valueAxis = chart.xAxes.push(new am4charts.ValueAxis()); 
+
+// Create series
+var series = chart.series.push(new am4charts.ColumnSeries3D());
+series.dataFields.valueX = "income";
+series.dataFields.categoryY = "year";
+series.name = "Income";
+series.columns.template.propertyFields.fill = "color";
+series.columns.template.tooltipText = "{valueX}";
+series.columns.template.column3D.stroke = am4core.color("#fff");
+series.columns.template.column3D.strokeOpacity = 0.2;
+
+}); // end am4core.ready()
+</script>
+
+
+<script>
+    function myMap() {
+      var mapCanvas = document.getElementById("map");
+      var mapOptions = {
+        center: new google.maps.LatLng(51.5, -0.2), zoom: 10
+      };
+      var map = new google.maps.Map(mapCanvas, mapOptions);
+    }
+</script>
+    
+<script 
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU&callback=myMap">
+</script>
+
+
+
+
+
+
+
+
+
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
+
+<style>
+body,h1,h2{font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+p {line-height: 2}
+.bgimg, .bgimg2 {
+  min-height: 100%;
+  background-position: center;
+  background-size: cover;
+}
+</style>
+
+
+<body>
+
+<!-- Header / Home-->
+<header class="w3-display-container w3-wide bgimg w3-grayscale-min" id="home">
+  <div class="w3-display-middle w3-text-white w3-center">
+    <h1 class="w3-jumbo">Robotics & AI</h1>
+    <h2 class="w3-large">KMITL HM Robotics Laboratory</h2>
+    <!-- <h2><b>...</b></h2> -->
+  </div>
+</header>
+
+<!-- Navbar (sticky bottom) -->
+<div class="w3-bottom w3-hide-small">
+  <div class="w3-bar w3-white w3-center w3-padding w3-opacity-min w3-hover-opacity-off">
+    <a href="#home" style="width:25%" class="w3-bar-item w3-button">Home</a>
+    <a href="#room" style="width:25%" class="w3-bar-item w3-button">Room booking</a>
+    <a href="#map" style="width:25%" class="w3-bar-item w3-button">Lab location</a>
+    <a href="#contact" style="width:25%" class="w3-bar-item w3-button w3-hover-black">Contact us</a>
+  </div>
+</div>
+
+<!-- About / Jane And John -->
+<div class="w3-container w3-padding-64 w3-black" id="room">
+  <div class="w3-content">
+    <h1 class="w3-center w3-text-grey"><b>Room booking data</b></h1>
+    <div id="chartdiv">
+    <!-- <img class="w3-round w3-grayscale-min" src="/w3images/wedding_couple2.jpg" style="width:100%;margin:32px 0"> -->
+    <!-- <p><i> put info here </i> -->
+    <!-- </p><br> -->
+    <!-- <p class="w3-center"><a href="#wedding" class="w3-button w3-black w3-round w3-padding-large w3-large">Wedding Details</a></p> -->
+  </div>
+</div>
+
+<!-- Background photo
+<div class="w3-display-container bgimg2">
+  <div class="w3-display-middle w3-text-white w3-center">
+    <h1 class="w3-jumbo">You Are Invited</h1><br>
+    <h2>Of course..</h2>
+  </div>
+</div> -->
+
+<!-- Wedding information -->
+<div class="w3-container w3-padding-64 w3-hover-black w3-center" id="map">
+  <div class="w3-content">
+    <h1 class="w3-text-grey"><b>Lab location</b></h1>
+    <div id="map" style="width:100%;height:400px;">
+  </div>
+</div>
+
+<!-- RSVP section -->
+<div class="w3-container w3-padding-64 w3-center w3-wide" id="contact">
+  <h1>Any question?</h1>
+  <p class="w3-large">Feel free to ask!</p>
+  <p class="w3-xlarge">
+    <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-round w3-red w3-opacity w3-hover-opacity-off" style="padding:8px 60px">COMMENT</button>
+  </p>
+</div>
+
+<!-- RSVP modal -->
+<div id="id01" class="w3-modal">
+  <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="padding:32px;max-width:600px">
+    <div class="w3-container w3-white w3-center">
+      <h1 class="w3-wide">Comment</h1>
+      <!-- <p> comment here </p> -->
+      <form>
+        <input class="w3-input w3-border" type="text" placeholder="(comment)" name="name">
+      </form>
+      <p><i>Presented by Robotics Sophomore</i></p>
+      <div class="w3-row">
+        <div class="w3-half">
+          <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-block w3-green">Send</button>
+        </div>
+        <div class="w3-half">
+          <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-block w3-red">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HTML -->
+<!-- <div id="chartdiv"></div> -->
+<!-- <div id="chartbar"></div> -->
+
+
+</body>
+</html>
